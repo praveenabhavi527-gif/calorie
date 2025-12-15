@@ -132,3 +132,37 @@ def main():
         col_graph, col_info = st.columns([2, 1])
         
         with col_graph:
+            fig, ax = plt.subplots(figsize=(10, 6))
+            
+            # Scatter plot of historical data
+            sns.scatterplot(data=df, x='minutes_exercised', y='calories_burned', color='blue', s=100, label='Historical Data', ax=ax)
+            
+            # Regression line
+            sns.regplot(data=df, x='minutes_exercised', y='calories_burned', scatter=False, color='red', ax=ax)
+            
+            # The User's specific prediction point
+            ax.scatter(input_minutes, prediction, color='#00ff00', s=200, edgecolors='black', label='Your Prediction', zorder=5)
+            
+            ax.set_title('Minutes Exercised vs Calories Burned', fontsize=15)
+            ax.set_xlabel('Minutes Exercised', fontsize=12)
+            ax.set_ylabel('Calories Burned', fontsize=12)
+            ax.legend()
+            ax.grid(True, linestyle='--', alpha=0.6)
+            
+            st.pyplot(fig)
+            
+        with col_info:
+            st.write("### How it works")
+            st.write("""
+            The red line represents the Linear Regression trend developed from the dataset.
+            
+            - **Blue Dots:** Past training sessions.
+            - **Green Dot:** Your current prediction based on the sidebar inputs.
+            """)
+            st.success(f"Model Coefficient (Slope): {model.coef_[1]:.2f} cal/min")
+
+    with tab2:
+        st.dataframe(df, use_container_width=True)
+
+if __name__ == "__main__":
+    main()
